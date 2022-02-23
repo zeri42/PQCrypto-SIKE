@@ -169,16 +169,24 @@ void mp_mul(const digit_t* a, const digit_t* b, digit_t* c, const unsigned int n
       digit_t y1y0[l + 1];
       mp_add(a,a+l,x1x0,l);
       mp_add(b,b+l,y1y0,l);
-      mp_mul(a,b,z1,l);
-      mp_mul(a+l,b+l,z0,l);
-      mp_mul(x1x0,y1y0,z2,l);
-      mp_sub(z1,z2,z1,l);
-      mp_sub(z1,z0,z1,l);
+      mp_mul(a,b,z0,l);
+      mp_mul(a+l,b+l,z2,l);
+      mp_mul(x1x0,y1y0,z1,l);
+      mp_sub(z1,z2,z1,nwords);
+      mp_sub(z1,z0,z1,nwords);
       for(int i=0;i<nwords;i++) {
-        c[i] = z0[i];
-        c[i+nwords] = z1[i];
-        c[i+nwords+l] = z2[i];
-      }     
+        c[i]=0;
+      }
+      mp_add(c,z0,c,nwords);
+      mp_add(c+l,z1,c+l,nwords);
+      mp_add(c+nwords,z2,c+nwords,nwords);
+    //   for(int i=0;i<nwords;i++) {
+    //     c[i] = z0[i];
+    //     c[i+nwords] = z1[i];
+    //     c[i+2*nwords] = z2[i];
+    //   }
+
+
   }
 }
 void mp_mul_comba(const digit_t* a, const digit_t* b, digit_t* c, const unsigned int nwords)

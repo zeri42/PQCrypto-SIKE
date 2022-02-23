@@ -5,7 +5,12 @@
 void phex(char *label, digit_t *x, unsigned int n) {
     printf("%s: ", label);
     for (int i = 0; i < n; i++){
-        printf("%08x",x[i]);
+        digit_t d = x[i];
+        for (int j = 0; j < 8; j++)
+        {
+            printf("%01x",d&0xf);
+            d >>= 4;
+        }
     }
     printf("\n");
 }
