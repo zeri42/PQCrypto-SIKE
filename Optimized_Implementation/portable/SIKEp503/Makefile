@@ -61,6 +61,7 @@ lib503: $(OBJECTS_503)
 
 tests: lib503
 	$(CC) $(CFLAGS) -L./sike tests/test_SIKEp503.c tests/test_extras.c -lsike $(LDFLAGS) -o sike/test_KEM $(ARM_SETTING)
+	$(CC) $(CFLAGS) -L./sike ./tests/mul_test.c tests/test_extras.c -lsike $(LDFLAGS) -o sike/test_mul $(ARM_SETTING)
 
 # AES
 AES_OBJS=objs/aes.o objs/aes_c.o

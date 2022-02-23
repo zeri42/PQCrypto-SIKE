@@ -133,8 +133,31 @@ void digit_x_digit(const digit_t a, const digit_t b, digit_t* c)
     c[1] ^= (ahbh & mask_high) + carry;       // C11
 }
 
-
-void mp_mul(const digit_t* a, const digit_t* b, digit_t* c, const unsigned int nwords)
+#define KARATSUBA_THRESH 4
+void mp_mul(const digit_t* a, const digit_t* b, digit_t* c, const unsigned int nwords) {
+  if (nwords < KARATSUBA_THRESH)  {
+    mp_mul_comba(a,b,c,nwords);
+  } else {
+      // a = x1 << m + x0
+      // b = y1 << m + y0
+      //c = z2<<2m + z1<<m + z0
+      // z2 = x1y1
+      // z1 = x1y0 + x0y1
+      // z0 = x0y0
+      ///
+      // z1 = (x1+x0)*(y1+y0) - z2 - z0
+      const unsigned int l = nwords/2;
+      digit_t z0[nwords/2 + 1];
+      digit_t z1[nwords/2 + 1];
+      digit_t z2[nwords/2 + 1];
+      digit_t x1x0[nwords/2 + 1];
+      digit_t y1y0[nwords/2 + 1];
+      mp_mul(a,b,z0,l);
+      mp_mul(a+l,b+l,z0,l);
+     
+  }
+}
+void mp_mul_comba(const digit_t* a, const digit_t* b, digit_t* c, const unsigned int nwords)
 { // Multiprecision comba multiply, c = a*b, where lng(a) = lng(b) = nwords.   
     unsigned int i, j;
     digit_t t = 0, u = 0, v = 0, UV[2];
